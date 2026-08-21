@@ -14,6 +14,7 @@
     "build-web": "webpack",
     "start": "node dist/index",
     "test": "mocha src/**/*.spec.ts -r ts-node/register && yarn --cwd examples",
+    "test:browser": "node scripts/browser-bundle.test.js",
     "prepublish": "npm run test && npm run build"
   },
   "author": "Jeeyong Um <conr2d@gmail.com>",
@@ -26,7 +27,12 @@
     "bigint-conversion": "^2.4.3",
     "buffer": "^6.0.3",
     "clean-webpack-plugin": "^4.0.0",
+    "constants-browserify": "^1.0.0",
+    "create-hash": "^1.2.0",
     "mocha": "^10.4.0",
+    "process": "^0.11.10",
+    "randombytes": "^2.1.0",
+    "stream-browserify": "^3.0.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.5.0",
     "tslib": "^2.3.1",
@@ -34,6 +40,9 @@
     "util": "^0.12.4",
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2"
+  },
+  "resolutions": {
+    "serialize-javascript": "^7.1.0"
   },
   "dependencies": {
     "@ethereumjs/util": "^8.0.0-beta.1",

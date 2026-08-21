@@ -25,12 +25,23 @@ module.exports = {
     new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: ['**/*'] }),
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
+      // node-rsa reads process.title to tell a browser from node, and webpack
+      // no longer supplies a process object of its own.
+      process: "process/browser",
     }),
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     fallback: {
       assert: false,
+      constants: require.resolve('constants-browserify'),
+      crypto: require.resolve('./webpack/crypto-shim.js'),
+      stream: require.resolve('stream-browserify'),
+      // rustbn.js and colors reach for these only on their node branches, which
+      // a browser build never takes.
+      fs: false,
+      os: false,
+      path: false,
     }
   },
   output: {

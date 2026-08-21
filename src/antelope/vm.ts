@@ -1,5 +1,9 @@
 import assert from "../assert";
 import Buffer, { bufferToBigInt, readBufferFromBigInt } from "../buffer";
+// node-rsa works on node buffers, and the Buffer above is this package's own
+// Uint8Array subclass. Node resolves this import to its built-in module, and a
+// bundler resolves it to the buffer package, so both get a real one.
+import { Buffer as NodeBuffer } from "buffer";
 import { log, Vert } from "../vert";
 import { IndexObject, KeyValueObject, SecondaryKeyStore, Table } from "./table";
 import { IteratorCache } from "./iterator-cache";
@@ -541,14 +545,14 @@ class VM extends Vert {
               exponentHex (${exponent_len}): ${exponentHex}
               modulusHex (${modulus_len}): ${modulusHex.substring(0, 100)}...`);
 
-            // Convert hex strings to Node.js buffers (using global Buffer, not custom Buffer)
-            const dataBuffer = global.Buffer.from(dataHex, 'hex');
-            const signatureBuffer = global.Buffer.from(signatureHex, 'hex');
+            // Convert hex strings to node buffers, not this package's Buffer.
+            const dataBuffer = NodeBuffer.from(dataHex, 'hex');
+            const signatureBuffer = NodeBuffer.from(signatureHex, 'hex');
 
             // Create RSA public key from components
             const key = new NodeRSA();
             key.importKey({
-              n: global.Buffer.from(modulusHex, 'hex'),
+              n: NodeBuffer.from(modulusHex, 'hex'),
               e: parseInt(exponentHex, 16)
             }, 'components-public');
 
